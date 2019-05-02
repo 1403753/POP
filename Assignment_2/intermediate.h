@@ -3,8 +3,8 @@
 
 struct ast {
   int nodetype;
+	char id[10];
 	double d;
-	char *id;
   struct ast *l;
   struct ast *r;
 };
@@ -12,7 +12,7 @@ struct ast {
 
 /* build an AST */
 // decision node
-struct ast *newast(int nodetype, struct ast *l, struct ast *r);
+struct ast *newast(char *nodetype, struct ast *l, struct ast *r);
 
 // leaf
 struct ast *newnum(double d);

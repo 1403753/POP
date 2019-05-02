@@ -46,9 +46,9 @@ extern int yydebug;
   enum yytokentype
   {
     CONSTANT = 258,
-    STRING_LITERAL = 259,
-    SIZEOF = 260,
-    IDENTIFIER = 261,
+    IDENTIFIER = 259,
+    STRING_LITERAL = 260,
+    SIZEOF = 261,
     PTR_OP = 262,
     INC_OP = 263,
     DEC_OP = 264,

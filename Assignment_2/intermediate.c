@@ -6,7 +6,7 @@
 extern int yyerror(char *s);
 
 
-struct ast *newast(int nodetype, struct ast *l, struct ast *r)
+struct ast *newast(char *nodetype, struct ast *l, struct ast *r)
 {
   struct ast *a = malloc(sizeof(struct ast));
   
@@ -14,7 +14,8 @@ struct ast *newast(int nodetype, struct ast *l, struct ast *r)
     yyerror("out of space");
     exit(0);
   }
-  a->nodetype = nodetype;
+  strncpy(a->id, nodetype, strlen(nodetype));
+  a->nodetype = 'D';
   a->l = l;
   a->r = r;
 
@@ -28,7 +29,7 @@ struct ast *newnum(double d)
     yyerror("out of space");
     exit(0);
   }
-  a->nodetype = 'K';
+  a->nodetype = 'C';
   a->d = d;
 	a->l = NULL;
 	a->r = NULL;
@@ -44,7 +45,7 @@ struct ast *newid(char *id)
     exit(0);
   }
   a->nodetype = 'I';
-  a->id = "DUMMY";
+  strncpy(a->id, id, strlen(id));
 	a->l = NULL;
 	a->r = NULL;
 	

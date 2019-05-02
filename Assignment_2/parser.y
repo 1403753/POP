@@ -22,37 +22,39 @@ extern char *yytext;
 	char *id;
 }
 
-%token <d> CONSTANT STRING_LITERAL SIZEOF
-%token <id> IDENTIFIER
+%token <d> CONSTANT 
+%token <id> IDENTIFIER STRING_LITERAL SIZEOF
+
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
 %token XOR_ASSIGN OR_ASSIGN TYPE_NAME
-
 %token TYPEDEF EXTERN STATIC AUTO REGISTER
 %token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
 %token STRUCT UNION ENUM ELLIPSIS
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
-%type <astree> primary_expression additive_expression multiplicative_expression 
+%type <astree> primary_expression additive_expression multiplicative_expression assignment_expression
 %type <astree> cast_expression expression unary_expression postfix_expression function_definition
 %type <astree> statement parse_tree compound_statement expression_statement labeled_statement
 %type <astree> selection_statement iteration_statement jump_statement statement_list declaration_list
+%type <astree> translation_unit external_declaration shift_expression relational_expression
+%type <astree> initializer_list initializer type_name unary_operator argument_expression_list
 
 %start translation_unit
 
 %%
 
 primary_expression
-	: IDENTIFIER						{ $$ = newid($1); 						if(debug)printf(" line:46 (primary_expression : IDENTIFIER)\n"); }
-	| CONSTANT							{ $$ = newnum($1);    				if(debug)printf(" line:47 (primary_expression : CONSTANT)\n"); }
-	| STRING_LITERAL				{ $$ = newnum($1); 						if(debug)printf(" line:48 (primary_expression : STRING_LITERAL)\n"); }
-	| '(' expression ')'		{ $$ = $2; 										if(debug)printf(" line:49 (primary_expression : '(' expression ')')\n"); }
+	: IDENTIFIER						{ $$ = newid($1); 						if(debug)printf(" --primary_expression : IDENTIFIER\n"); }
+	| CONSTANT							{ $$ = newnum($1);    				if(debug)printf(" --primary_expression : CONSTANT\n"); }
+	| STRING_LITERAL				{ $$ = newid($1); 						if(debug)printf(" --primary_expression : STRING_LITERAL\n"); }
+	| '(' expression ')'		{ $$ = $2; 										if(debug)printf(" --primary_expression : '(' expression ')'\n"); }
 	;
 
 postfix_expression 
-	: primary_expression 																				
+	: primary_expression 																		{ if(debug)printf(" --postfix_expression : primary_expression\n"); }
 	| postfix_expression '[' expression ']'
 	| postfix_expression '(' ')'
 	| postfix_expression '(' argument_expression_list ')'
@@ -63,17 +65,17 @@ postfix_expression
 	;
 
 argument_expression_list
-	: assignment_expression																	{ if(debug)printf(" line:64 (argument_expression_list : assignment_expression)\n"); }
-	| argument_expression_list ',' assignment_expression		{ if(debug)printf(" line:65 (argument_expression_list : argument_expression_list ',' assignment_expression)\n"); }
+	: assignment_expression																	{ if(debug)printf(" --argument_expression_list : assignment_expression\n"); }
+	| argument_expression_list ',' assignment_expression		{ $$ = newast(",", $1, $3); if(debug)printf(" --argument_expression_list : argument_expression_list ',' assignment_expression\n"); }
 	;
 
 unary_expression
-	: postfix_expression   
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
-	| unary_operator cast_expression
-	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')'
+	: postfix_expression   																	{ $$ = $1; if(debug)printf(" --unary_expression : postfix_expression\n"); }
+	| INC_OP unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : INC_OP unary_expression\n"); }
+	| DEC_OP unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : DEC_OP unary_expression\n"); }
+	| unary_operator cast_expression												{ $$ = newast("unary/cast", $1, $2); }
+	| SIZEOF unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : SIZEOF unary_expression\n");}
+	| SIZEOF '(' type_name ')'															{ $$ = $3; if(debug)printf(" --unary_expression : SIZEOF '(' type_name ')'\n");}
 	;
 
 unary_operator
@@ -86,76 +88,76 @@ unary_operator
 	;
 
 cast_expression
-	: unary_expression																			{ if(debug)printf(" line:87 (cast_expression : unary_expression)\n"); }
-	| '(' type_name ')' cast_expression  										{ if(debug)printf(" line:86 (cast_expression : '(' type_name ')' cast_expression)\n"); }
+	: unary_expression																			{ $$ = $1; if(debug)printf(" --cast_expression : unary_expression\n"); }
+	| '(' type_name ')' cast_expression  										{ if(debug)printf(" --cast_expression : '(' type_name ')' cast_expression\n"); }
 	;
 
 multiplicative_expression
-	: cast_expression																				{ $$ = $1; if(debug)printf(" line:92 (multiplicative_expression : cast_expression\n"); }
-	| multiplicative_expression '*' cast_expression					{	$$ = newast('*', $1, $3); if(debug)printf(" line:93 (multiplicative_expression : multiplicative_expression '*' cast_expression\n"); }
-	| multiplicative_expression '/' cast_expression					{	$$ = newast('/', $1, $3); if(debug)printf(" line:94 (multiplicative_expression : multiplicative_expression '/' cast_expression\n"); }
-	| multiplicative_expression '%' cast_expression					{	$$ = newast('%', $1, $3); if(debug)printf(" line:95 (multiplicative_expression : multiplicative_expression 'prozent' cast_expression\n"); }
+	: cast_expression																				{ $$ = $1; if(debug)printf(" --multiplicative_expression : cast_expression\n"); }
+	| multiplicative_expression '*' cast_expression					{	$$ = newast("*", $1, $3); if(debug)printf(" --multiplicative_expression : multiplicative_expression '*' cast_expression\n"); }
+	| multiplicative_expression '/' cast_expression					{	$$ = newast("/", $1, $3); if(debug)printf(" --multiplicative_expression : multiplicative_expression '/' cast_expression\n"); }
+	| multiplicative_expression '%' cast_expression					{	$$ = newast("%", $1, $3); if(debug)printf(" --multiplicative_expression : multiplicative_expression 'prozent' cast_expression\n"); }
 	;
 
 additive_expression
-	: multiplicative_expression															{ $$ = $1; if(debug)printf(" line:99 (additive_expression : multiplicative_expression\n");}
-	| additive_expression '+' multiplicative_expression 		{ $$ = newast('+', $1, $3); if(debug)printf(" line:100 (additive_expression : additive_expression '+' multiplicative_expression\n"); }
-	| additive_expression '-' multiplicative_expression			{	$$ = newast('-', $1, $3); if(debug)printf(" line:101 (additive_expression : additive_expression '-' multiplicative_expression\n"); }
+	: multiplicative_expression															{ $$ = $1; if(debug)printf(" --additive_expression : multiplicative_expression\n");}
+	| additive_expression '+' multiplicative_expression 		{ $$ = newast("+", $1, $3); if(debug)printf(" --additive_expression : additive_expression '+' multiplicative_expression\n"); }
+	| additive_expression '-' multiplicative_expression			{	$$ = newast("-", $1, $3); if(debug)printf(" --additive_expression : additive_expression '-' multiplicative_expression\n"); }
 	;
 
 shift_expression
-	: additive_expression  																	{ if(debug)printf(" line:105 (shift_expression : additive_expression)\n"); }
-	| shift_expression LEFT_OP additive_expression					{ if(debug)printf(" line:106 (shift_expression : shift_expression LEFT_OP additive_expression)\n"); }
-	| shift_expression RIGHT_OP additive_expression					{ if(debug)printf(" line:107 (shift_expression : shift_expression RIGHT_OP additive_expression)\n"); }
+	: additive_expression  																	{ if(debug)printf(" --shift_expression : additive_expression\n"); }
+	| shift_expression LEFT_OP additive_expression					{ if(debug)printf(" --shift_expression : shift_expression LEFT_OP additive_expression\n"); }
+	| shift_expression RIGHT_OP additive_expression					{ if(debug)printf(" --shift_expression : shift_expression RIGHT_OP additive_expression\n"); }
 	;
 
 relational_expression																					
-	: shift_expression
-	| relational_expression '<' shift_expression
-	| relational_expression '>' shift_expression
-	| relational_expression LE_OP shift_expression
-	| relational_expression GE_OP shift_expression
+	: shift_expression																			{														if(debug)printf(" --relational_expression : shift_expression\n"); }
+	| relational_expression '<' shift_expression						{ $$ = newast("<", $1, $3); if(debug)printf(" --relational_expression : relational_expression '<' shift_expression\n"); }
+	| relational_expression '>' shift_expression						{ $$ = newast(">", $1, $3); if(debug)printf(" --relational_expression : relational_expression '>' shift_expression\n"); }
+	| relational_expression LE_OP shift_expression					//{ $$ = newast("<=", $1, $3); if(debug)printf(" --relational_expression : relational_expression LE_OP shift_expression\n"); }
+	| relational_expression GE_OP shift_expression					//{ $$ = newast(">=", $1, $3); if(debug)printf(" --relational_expression : relational_expression GE_OP shift_expression\n"); }
 	;
 
 equality_expression
-	: relational_expression																
+	: relational_expression																	{														if(debug)printf(" --equality_expression : relational_expression\n"); }
 	| equality_expression EQ_OP relational_expression
 	| equality_expression NE_OP relational_expression
 	;
 
 and_expression
-	: equality_expression
+	: equality_expression																		{														if(debug)printf(" --and_expression : equality_expression\n"); }
 	| and_expression '&' equality_expression
 	;
 
 exclusive_or_expression
-	: and_expression
+	: and_expression																				{														if(debug)printf(" --exclusive_or_expression : and_expression\n"); }
 	| exclusive_or_expression '^' and_expression
 	;
 
 inclusive_or_expression
-	: exclusive_or_expression
+	: exclusive_or_expression																{														if(debug)printf(" --inclusive_or_expression : exclusive_or_expression\n"); }
 	| inclusive_or_expression '|' exclusive_or_expression
 	;
 
 logical_and_expression
-	: inclusive_or_expression
+	: inclusive_or_expression																{														if(debug)printf(" --logical_and_expression : inclusive_or_expression\n"); }
 	| logical_and_expression AND_OP inclusive_or_expression
 	;
 
 logical_or_expression
-	: logical_and_expression
+	: logical_and_expression																{														if(debug)printf(" --logical_or_expression : logical_and_expression\n"); }
 	| logical_or_expression OR_OP logical_and_expression
 	;
 
 conditional_expression
-	: logical_or_expression
+	: logical_or_expression																	{														if(debug)printf(" --conditional_expression : logical_or_expression\n"); }
 	| logical_or_expression '?' expression ':' conditional_expression
 	;
 
 assignment_expression
-	: conditional_expression																					{ if(debug)printf(" line:155 (assignment_expression : conditional_expression)\n"); }
-	| unary_expression assignment_operator assignment_expression			{ if(debug)printf(" line:156 (assignment_expression : unary_expression assignment_operator assignment_expression)\n"); }
+	: conditional_expression																					{ if(debug)printf(" --assignment_expression : conditional_expression\n"); }
+	| unary_expression assignment_operator assignment_expression			{ if(debug)printf(" --assignment_expression : unary_expression assignment_operator assignment_expression\n"); }
 	;
 
 assignment_operator
@@ -173,12 +175,12 @@ assignment_operator
 	;
 
 expression
-	: assignment_expression 																{ if(debug)printf(" line:174 (expression : assignment_expression)\n"); }
-	| expression ',' assignment_expression 									{ if(debug)printf(" line:175 (expression : expression ',' assignment_expression)\n"); }
+	: assignment_expression 																{ if(debug)printf(" --expression : assignment_expression\n"); }
+	| expression ',' assignment_expression 									{ if(debug)printf(" --expression : expression ',' assignment_expression\n"); }
 	;																								
 
 constant_expression                        
-	: conditional_expression																{ if(debug)printf(" line:179 (constant_expression : conditional_expression)\n"); }
+	: conditional_expression																{ if(debug)printf(" --constant_expression : conditional_expression\n"); }
 	;
 
 declaration
@@ -360,23 +362,23 @@ direct_abstract_declarator
 	;
 
 initializer
-	: assignment_expression												{ if(debug)printf(" line:361 (initializer : assignment_expression)\n"); }
-	| '{' initializer_list '}'										{ if(debug)printf(" line:362 (initializer : '{' initializer_list '}')\n"); }
-	| '{' initializer_list ',' '}'								{ if(debug)printf(" line:363 (initializer : '{' initializer_list ',' '}')\n"); }
+	: assignment_expression												{ if(debug)printf(" --initializer : assignment_expression\n"); }
+	| '{' initializer_list '}'										{ if(debug)printf(" --initializer : '{' initializer_list '}'\n"); }
+	| '{' initializer_list ',' '}'								{ if(debug)printf(" --initializer : '{' initializer_list ',' '}'\n"); }
 	;
 
 initializer_list
-	: initializer																	{ if(debug)printf(" line:367 (initializer_list : initializer)\n"); }
-	| initializer_list ',' initializer						{ if(debug)printf(" line:368 (initializer_list : initializer_list ',' initializer)\n"); }
+	: initializer																	{ if(debug)printf(" --initializer_list : initializer\n"); }
+	| initializer_list ',' initializer						{ $$ = newast(",", $1, $3);  if(debug)printf(" --initializer_list : initializer_list ',' initializer\n"); }
 	;
 
 statement
-	: labeled_statement														{ $$ = $1; if(debug)printf(" line:372 (statement : labeled_statement)\n"); }
-	| compound_statement													{ $$ = $1; if(debug)printf(" line:373 (statement : compound_statement)\n"); }
-	| expression_statement												{ $$ = $1; if(debug)printf(" line:374 (statement : expression_statement)\n"); }
-	| selection_statement													{ $$ = $1; if(debug)printf(" line:375 (statement : selection_statement)\n"); }
-	| iteration_statement													{ $$ = $1; if(debug)printf(" line:376 (statement : iteration_statement)\n"); }
-	| jump_statement															{ $$ = $1; if(debug)printf(" line:377 (statement : jump_statement)\n"); }
+	: labeled_statement														{ $$ = $1; if(debug)printf(" --statement : labeled_statement\n"); }
+	| compound_statement													{ $$ = $1; if(debug)printf(" --statement : compound_statement\n"); }
+	| expression_statement												{ $$ = $1; if(debug)printf(" --statement : expression_statement\n"); }
+	| selection_statement													{ $$ = $1; if(debug)printf(" --statement : selection_statement\n"); }
+	| iteration_statement													{ $$ = $1; if(debug)printf(" --statement : iteration_statement\n"); }
+	| jump_statement															{ $$ = $1; if(debug)printf(" --statement : jump_statement\n"); }
 	;
 
 labeled_statement
@@ -386,10 +388,10 @@ labeled_statement
 	;
 
 compound_statement
-	: '{' '}'																			{					 if(debug)printf(" line:387 (compound_statement : '{' '}')\n"); }
-	| '{' statement_list '}'											{ $$ = $2; if(debug)printf(" line:388 (compound_statement : '{' statement_list '}')\n"); }
-	| '{' declaration_list '}'										{ $$ = $2; if(debug)printf(" line:389 (compound_statement : '{' declaration_list '}')\n"); }
-	| '{' declaration_list statement_list '}'			{ $$ = $2; if(debug)printf(" line:390 (compound_statement : '{' declaration_list statement_list '}')\n"); }
+	: '{' '}'																			{														if(debug)printf(" --compound_statement : '{' '}'\n"); }
+	| '{' statement_list '}'											{	$$=$2; 										if(debug)printf(" --compound_statement : '{' statement_list '}'\n"); }
+	| '{' declaration_list '}'										{ $$=$2; 										if(debug)printf(" --compound_statement : '{' declaration_list '}'\n"); }
+	| '{' declaration_list statement_list '}'			{ $$ = newast("stmt", $2, $3); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
 	;
 
 declaration_list
@@ -398,13 +400,13 @@ declaration_list
 	;
 
 statement_list
-	: statement																		{ $$ = $1; if(debug)printf(" line:399 (statement_list : statement)\n"); }
-	| statement_list statement										{ $$ = newast(';', $1, $2); if(debug)printf(" line:400 (statement_list : statement_list statement)\n"); }
+	: statement																		{ $$ = $1; if(debug)printf(" --statement_list : statement\n"); }
+	| statement_list statement										{ $$ = newast("stmt", $1, $2); if(debug)printf(" --statement_list : statement_list statement\n"); }
 	;
 
 expression_statement
-	: ';'																					{					 if(debug)printf(" line:404 (expression_statement : ;)\n"); }
-	| expression ';'															{ $$ = $1; if(debug)printf(" line:405 (expression_statement : expression ';')\n"); }
+	: ';'																					{						if(debug)printf(" --expression_statement : ;\n"); }
+	| expression ';'															{						if(debug)printf(" --expression_statement : expression ';'\n"); }
 	;
 
 selection_statement
@@ -414,39 +416,39 @@ selection_statement
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement
-	| DO statement WHILE '(' expression ')' ';'
-	| FOR '(' expression_statement expression_statement ')' statement
-	| FOR '(' expression_statement expression_statement expression ')' statement
+	: WHILE '(' expression ')' statement																					{ if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
+	| DO statement WHILE '(' expression ')' ';'																		{ if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
+	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("for", $6, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("for", $7, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
 	;
 
 jump_statement
-	: GOTO IDENTIFIER ';'																											{ 					if(debug)printf(" line:426 (jump_statement : GOTO IDENTIFIER ';')\n"); }
-	| CONTINUE ';'																														{ 					if(debug)printf(" line:426 (jump_statement : CONTINUE ';')\n"); }
-	| BREAK ';'																																{ 					if(debug)printf(" line:426 (jump_statement : BREAK ';')\n"); }
-	| RETURN ';'																															{ 					if(debug)printf(" line:426 (jump_statement : RETURN ';')\n"); }
-	| RETURN expression ';'																										{ $$ = $2;	if(debug)printf(" line:426 (jump_statement : RETURN expression ';')\n"); }
+	: GOTO IDENTIFIER ';'																											{ 					if(debug)printf(" --jump_statement : GOTO IDENTIFIER ';'\n"); }
+	| CONTINUE ';'																														{ 					if(debug)printf(" --jump_statement : CONTINUE ';'\n"); }
+	| BREAK ';'																																{ 					if(debug)printf(" --jump_statement : BREAK ';'\n"); }
+	| RETURN ';'																															{ 					if(debug)printf(" --jump_statement : RETURN ';'\n"); }
+	| RETURN expression ';'																										{ $$ = $2;	if(debug)printf(" --jump_statement : RETURN expression ';'\n"); }
 	;
 	
 translation_unit
-	: external_declaration	                    															{ if(debug)printf(" line:430 (translation_unit : external_declaration)\n"); }
-	| translation_unit external_declaration 																	{ if(debug)printf(" line:431 (translation_unit : translation_unit external_declaration)\n"); }
+	: external_declaration	                    															{ if(debug)printf(" --translation_unit : external_declaration\n"); }
+	| translation_unit external_declaration 																	{ $$ = newast(";", $1, $2); if(debug)printf(" --translation_unit : translation_unit external_declaration\n"); }
 	;
 
 external_declaration
-	: parse_tree							 																								{ *astree = $1; if(debug)printf(" line:435 (external_declaration : parsetree)\n"); }
+	: parse_tree							 																								{ *astree = $1; if(debug)printf(" --external_declaration : parse_tree\n"); }
 	;
 	
 parse_tree
-	: function_definition 																										{ if(debug)printf(" line:439 (parse_tree : function_definition)\n"); }
-	| declaration																															{ if(debug)printf(" line:440 (parse_tree : declaration)\n"); }
+	: function_definition 																										{ if(debug)printf(" --parse_tree : function_definition\n"); }
+	| declaration																															{ if(debug)printf(" --parse_tree : declaration\n"); }
 	;
 	
 function_definition
-	: declaration_specifiers declarator declaration_list compound_statement 	{ $$ = $4; if(debug)printf(" line:444 (function_definition : declaration_specifiers declarator declaration_list compound_statement)\n"); }
-	| declaration_specifiers declarator compound_statement										{ $$ = $3; if(debug)printf(" line:445 (function_definition : declaration_specifiers declarator compound_statement)\n"); }
-	| declarator declaration_list compound_statement													{ $$ = $3; if(debug)printf(" line:446 (function_definition : declarator declaration_list compound_statement)\n"); }
-	| declarator compound_statement																						{ $$ = $2; if(debug)printf(" line:447 (function_definition : declarator compound_statement)\n"); }
+	: declaration_specifiers declarator declaration_list compound_statement 	{ $$ = $4; if(debug)printf(" --function_definition : declaration_specifiers declarator declaration_list compound_statement\n"); }
+	| declaration_specifiers declarator compound_statement										{ $$ = $3; if(debug)printf(" --function_definition : declaration_specifiers declarator compound_statement\n"); }
+	| declarator declaration_list compound_statement													{ $$ = $3; if(debug)printf(" --function_definition : declarator declaration_list compound_statement\n"); }
+	| declarator compound_statement																						{ $$ = $2; if(debug)printf(" --function_definition : declarator compound_statement\n"); }
 	;
 	
 %%
@@ -469,12 +471,12 @@ void write_node(struct ast *e, FILE *dotfile, int node, int parent){
 
 void write_tree(struct ast *e, FILE *dotfile, int node){
 	printf("TREE\n");
-	if (e->nodetype == 'K')
+	if (e->nodetype == 'C')
 		fprintf(dotfile, " %d [label=\"%.2f\"];\n", node, e->d);
 	else if (e->nodetype == 'I')
 		fprintf(dotfile, " %d [label=\"%s\"];\n", node, e->id);
-	else
-		fprintf(dotfile, " %d [label=\"%c\"];\n", node, (char)e->nodetype);
+	else if (e->nodetype == 'D')
+		fprintf(dotfile, " %d [label=\"%s\"];\n", node, e->id);
 		
   if (e->l != NULL)
 		write_node(e->l, dotfile, 2*node, node);
