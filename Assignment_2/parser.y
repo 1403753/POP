@@ -25,13 +25,13 @@ extern char *yytext;
 %token <d> CONSTANT 
 %token <id> IDENTIFIER STRING_LITERAL SIZEOF
 
-%token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
-%token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
-%token XOR_ASSIGN OR_ASSIGN TYPE_NAME
-%token TYPEDEF EXTERN STATIC AUTO REGISTER
-%token CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
-%token STRUCT UNION ENUM ELLIPSIS
+%token <id> PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
+%token <id> AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+%token <id> SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
+%token <id> XOR_ASSIGN OR_ASSIGN TYPE_NAME
+%token <id> TYPEDEF EXTERN STATIC AUTO REGISTER
+%token <id> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+%token <id> STRUCT UNION ENUM ELLIPSIS
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
@@ -40,7 +40,13 @@ extern char *yytext;
 %type <astree> statement parse_tree compound_statement expression_statement labeled_statement
 %type <astree> selection_statement iteration_statement jump_statement statement_list declaration_list
 %type <astree> translation_unit external_declaration shift_expression relational_expression
-%type <astree> initializer_list initializer type_name unary_operator argument_expression_list
+%type <astree> initializer_list initializer type_name unary_operator argument_expression_list 
+%type <astree> specifier_qualifier_list type_specifier struct_or_union_specifier enum_specifier
+%type <astree> struct_declaration_list struct_declaration struct_or_union type_qualifier enumerator_list
+%type <astree> enumerator constant_expression declaration declaration_specifiers storage_class_specifier
+%type <astree> declarator pointer direct_declarator
+
+%type <id> '&' '*' '+' '-' '~' '!'
 
 %start translation_unit
 
@@ -79,12 +85,12 @@ unary_expression
 	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&'																										{ $$ = newid($1); }
+	| '*'																										{ $$ = newid($1); }
+	| '+'																										{ $$ = newid($1); }
+	| '-'																										{ $$ = newid($1); }
+	| '~'																										{ $$ = newid($1); }
+	| '!'																										{ $$ = newid($1); }
 	;
 
 cast_expression
@@ -208,26 +214,26 @@ init_declarator
 	;
 
 storage_class_specifier
-	: TYPEDEF
-	| EXTERN
-	| STATIC
-	| AUTO
-	| REGISTER
+	: TYPEDEF														{ $$ = newid("TYPEDEF"); }
+	| EXTERN														{ $$ = newid("EXTERN"); }
+	| STATIC														{ $$ = newid("STATIC"); }
+	| AUTO															{ $$ = newid("AUTO"); }
+	| REGISTER													{ $$ = newid("REGISTER"); }
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| struct_or_union_specifier
-	| enum_specifier
-	| TYPE_NAME
+	: VOID															{ $$ = newid("VOID"); }
+	| CHAR															{ $$ = newid("CHAR"); }
+	| SHORT															{ $$ = newid("SHORT"); }
+	| INT																{ $$ = newid("INT"); }
+	| LONG															{ $$ = newid("LONG"); }
+	| FLOAT															{ $$ = newid("FLOAT"); }
+	| DOUBLE														{ $$ = newid("DOUBLE"); }
+	| SIGNED														{ $$ = newid("SIGNED"); }
+	| UNSIGNED													{ $$ = newid("UNSIGNED"); }
+	| struct_or_union_specifier					{ $$ = $1; }
+	| enum_specifier										{ $$ = $1; }
+	| TYPE_NAME													{ $$ = newid("TYPE_NAME"); }
 	;
 
 struct_or_union_specifier
@@ -237,8 +243,8 @@ struct_or_union_specifier
 	;
 
 struct_or_union
-	: STRUCT
-	| UNION
+	: STRUCT														{ $$ = newid("STRUCT"); }
+	| UNION															{ $$ = newid("UNION"); }
 	;
 
 struct_declaration_list
@@ -269,9 +275,9 @@ struct_declarator
 	;
 
 enum_specifier
-	: ENUM '{' enumerator_list '}'
-	| ENUM IDENTIFIER '{' enumerator_list '}'
-	| ENUM IDENTIFIER
+	: ENUM '{' enumerator_list '}'										{ $$ = $3; }
+	| ENUM IDENTIFIER '{' enumerator_list '}'					{	$$ = $4; }
+	| ENUM IDENTIFIER																	{					 }
 	;
 
 enumerator_list
@@ -280,13 +286,13 @@ enumerator_list
 	;
 
 enumerator
-	: IDENTIFIER
-	| IDENTIFIER '=' constant_expression
+	: IDENTIFIER																			{ $$ = newid("IDENTIFIER"); }
+	| IDENTIFIER '=' constant_expression							{ $$ = $3; }
 	;
 
 type_qualifier
-	: CONST
-	| VOLATILE
+	: CONST																						{ $$ = newid("CONST"); }
+	| VOLATILE																				{ $$ = newid("VOLATILE"); }
 	;
 
 declarator
@@ -382,16 +388,16 @@ statement
 	;
 
 labeled_statement
-	: IDENTIFIER ':' statement
-	| CASE constant_expression ':' statement
-	| DEFAULT ':' statement
+	: IDENTIFIER ':' statement										{ $$ = $3; }
+	| CASE constant_expression ':' statement			{ $$ = newast("CASE", $2, $4); }
+	| DEFAULT ':' statement												{ $$ = $3; }
 	;
 
 compound_statement
 	: '{' '}'																			{														if(debug)printf(" --compound_statement : '{' '}'\n"); }
 	| '{' statement_list '}'											{	$$=$2; 										if(debug)printf(" --compound_statement : '{' statement_list '}'\n"); }
 	| '{' declaration_list '}'										{ $$=$2; 										if(debug)printf(" --compound_statement : '{' declaration_list '}'\n"); }
-	| '{' declaration_list statement_list '}'			{ $$ = newast("stmt", $2, $3); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
+	| '{' declaration_list statement_list '}'			{ $$ = newast("STMT", $2, $3); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
 	;
 
 declaration_list
@@ -401,7 +407,7 @@ declaration_list
 
 statement_list
 	: statement																		{ $$ = $1; if(debug)printf(" --statement_list : statement\n"); }
-	| statement_list statement										{ $$ = newast("stmt", $1, $2); if(debug)printf(" --statement_list : statement_list statement\n"); }
+	| statement_list statement										{ $$ = newast("STMT", $1, $2); if(debug)printf(" --statement_list : statement_list statement\n"); }
 	;
 
 expression_statement
@@ -410,16 +416,16 @@ expression_statement
 	;
 
 selection_statement
-	: IF '(' expression ')' statement
-	| IF '(' expression ')' statement ELSE statement
-	| SWITCH '(' expression ')' statement
+	: IF '(' expression ')' statement											{ $$ = newast("IF", $3, $5); }
+	| IF '(' expression ')' statement ELSE statement			{ $$ = newast("IF", $3, newast("<-IF | ELSE->", $5, $7)); }
+	| SWITCH '(' expression ')' statement									{ $$ = newast("SWITCH", $3, $5); }
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement																					{ if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
-	| DO statement WHILE '(' expression ')' ';'																		{ if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
-	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("for", $6, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
-	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("for", $7, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
+	: WHILE '(' expression ')' statement																					{ $$ = newast("WHILE", $3, $5); if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
+	| DO statement WHILE '(' expression ')' ';'																		{ $$ = newast("DOWHILE", $2, $5); if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
+	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("FOR", $6, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("FOR", $7, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
 	;
 
 jump_statement
@@ -533,9 +539,10 @@ int main(int argc, char **argv)
 	
 	yyresult = yyparse(&astree);
 		
-	if (yyresult)
+	if (yyresult) {
 		fprintf(stdout,"\n\nErrors detected.\n");
-	else
+		exit(yyresult);
+	} else
 		fprintf(stdout,"\n\nNo errors detected.\n");
 
 	write_graphviz(astree);	
