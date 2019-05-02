@@ -54,21 +54,9 @@ struct ast *newid(char *id)
 
 void treefree(struct ast *a)
 {
-  switch(a->nodetype) {
-    /* two subtrees */
-  case '+':
-  case '-':
-  case '*':
-  case '/':
-    treefree(a->r);
-    /* one subtree */
-  case '|':
-  case 'M':
-    treefree(a->l);
-		 /* no subtree */
-  case 'K':
-    free(a);
-    break;
-  default: printf("internal error: free bad node %c\n", a->nodetype);
-  }
+	if (a->nodetype != 'D') {
+		treefree(a->r);
+		treefree(a->l);
+	}
+	free(a);
 }

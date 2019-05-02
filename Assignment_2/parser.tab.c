@@ -2678,7 +2678,7 @@ void write_tree(struct ast *e, FILE *dotfile, int node){
 }
 
 void write_graphviz(struct ast *e){
-  FILE *dotfile = fopen("file.dot", "w");
+  FILE *dotfile = fopen("test_function.dot", "w");
   fprintf(dotfile, "digraph tree {\n");
   write_tree(e, dotfile, 1);
   fprintf(dotfile, "}\n");
@@ -2734,6 +2734,8 @@ int main(int argc, char **argv)
 
 	write_graphviz(astree);	
 
+	treefree(astree);
+	
 	exit(yyresult);
 }
 
