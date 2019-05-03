@@ -18,7 +18,10 @@ clean:
 	rm -f lex.yy.c parser.tab.c parser.tab.h cparser 
 
 clean_all:
-	rm -f lex.yy.c parser.tab.c parser.tab.h cparser *.lis 
+	rm -f lex.yy.c parser.tab.c parser.tab.h cparser *.lis *.png *.dot *.eps
+	
+png:
+	dot -Tpng  test_function.dot -o test_function.png
 
-dot:
-	dot -Tpng file.dot -o file.png
+eps:
+	dot -Teps  test_function.dot -o test_function.eps

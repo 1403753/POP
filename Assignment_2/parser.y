@@ -10,8 +10,8 @@ char *output_filename = "a.c";
 int yylex();
 int yyerror(struct ast **astree, char *s);
 
-int debug = 1;
-extern char *yytext;
+int debug = 0;
+//extern char *yytext;
 %}
 
 %parse-param {struct ast **astree}
@@ -33,7 +33,9 @@ extern char *yytext;
 %token <id> CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
 %token <id> STRUCT UNION ENUM ELLIPSIS
 
-%token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+%token <id> CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+
+%type <id> '&' '*' '+' '-' '~' '!'
 
 %type <astree> primary_expression additive_expression multiplicative_expression assignment_expression
 %type <astree> cast_expression expression unary_expression postfix_expression function_definition
@@ -44,9 +46,8 @@ extern char *yytext;
 %type <astree> specifier_qualifier_list type_specifier struct_or_union_specifier enum_specifier
 %type <astree> struct_declaration_list struct_declaration struct_or_union type_qualifier enumerator_list
 %type <astree> enumerator constant_expression declaration declaration_specifiers storage_class_specifier
-%type <astree> declarator pointer direct_declarator
+%type <astree> declarator pointer direct_declarator init_declarator type_qualifier_list equality_expression
 
-%type <id> '&' '*' '+' '-' '~' '!'
 
 %start translation_unit
 
@@ -121,14 +122,14 @@ relational_expression
 	: shift_expression																			{														if(debug)printf(" --relational_expression : shift_expression\n"); }
 	| relational_expression '<' shift_expression						{ $$ = newast("<", $1, $3); if(debug)printf(" --relational_expression : relational_expression '<' shift_expression\n"); }
 	| relational_expression '>' shift_expression						{ $$ = newast(">", $1, $3); if(debug)printf(" --relational_expression : relational_expression '>' shift_expression\n"); }
-	| relational_expression LE_OP shift_expression					//{ $$ = newast("<=", $1, $3); if(debug)printf(" --relational_expression : relational_expression LE_OP shift_expression\n"); }
-	| relational_expression GE_OP shift_expression					//{ $$ = newast(">=", $1, $3); if(debug)printf(" --relational_expression : relational_expression GE_OP shift_expression\n"); }
+	| relational_expression LE_OP shift_expression					{ $$ = newast("<=", $1, $3); if(debug)printf(" --relational_expression : relational_expression LE_OP shift_expression\n"); }
+	| relational_expression GE_OP shift_expression					{ $$ = newast(">=", $1, $3); if(debug)printf(" --relational_expression : relational_expression GE_OP shift_expression\n"); }
 	;
 
 equality_expression
 	: relational_expression																	{														if(debug)printf(" --equality_expression : relational_expression\n"); }
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
+	| equality_expression EQ_OP relational_expression				{ $$ = newast("==", $1, $3); }
+	| equality_expression NE_OP relational_expression				{ $$ = newast("!=", $1, $3); }
 	;
 
 and_expression
@@ -182,7 +183,7 @@ assignment_operator
 
 expression
 	: assignment_expression 																{ if(debug)printf(" --expression : assignment_expression\n"); }
-	| expression ',' assignment_expression 									{ if(debug)printf(" --expression : expression ',' assignment_expression\n"); }
+	| expression ',' assignment_expression 									{ $$ = newast(",", $1, $3);	if(debug)printf(" --expression : expression ',' assignment_expression\n"); }
 	;																								
 
 constant_expression                        
@@ -190,17 +191,17 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
+	: declaration_specifiers ';'														{ if(debug)printf(" --declaration : declaration_specifiers ';'\n"); }
+	| declaration_specifiers init_declarator_list ';'				{ if(debug)printf(" --declaration : declaration_specifiers init_declarator_list ';'\n"); }
 	;
 
 declaration_specifiers
-	: storage_class_specifier
-	| storage_class_specifier declaration_specifiers
-	| type_specifier
-	| type_specifier declaration_specifiers
-	| type_qualifier
-	| type_qualifier declaration_specifiers
+	: storage_class_specifier																{ if(debug)printf(" --declaration_specifiers : storage_class_specifier\n"); }
+	| storage_class_specifier declaration_specifiers				{ if(debug)printf(" --declaration_specifiers : storage_class_specifier declaration_specifiers\n"); }
+	| type_specifier																				{ if(debug)printf(" --declaration_specifiers : type_specifier\n"); }
+	| type_specifier declaration_specifiers									{ if(debug)printf(" --declaration_specifiers : type_specifier declaration_specifiers\n"); }
+	| type_qualifier																				{ if(debug)printf(" --declaration_specifiers : type_qualifier\n"); }
+	| type_qualifier declaration_specifiers									{ if(debug)printf(" --declaration_specifiers : type_qualifier declaration_specifiers\n"); }
 	;
 
 init_declarator_list
@@ -209,8 +210,8 @@ init_declarator_list
 	;
 
 init_declarator
-	: declarator
-	| declarator '=' initializer
+	: declarator												{ $$ = $1; }
+	| declarator '=' initializer				{ $$ = newast("=", $1, $3); }
 	;
 
 storage_class_specifier
@@ -222,18 +223,18 @@ storage_class_specifier
 	;
 
 type_specifier
-	: VOID															{ $$ = newid("VOID"); }
-	| CHAR															{ $$ = newid("CHAR"); }
-	| SHORT															{ $$ = newid("SHORT"); }
-	| INT																{ $$ = newid("INT"); }
-	| LONG															{ $$ = newid("LONG"); }
-	| FLOAT															{ $$ = newid("FLOAT"); }
-	| DOUBLE														{ $$ = newid("DOUBLE"); }
-	| SIGNED														{ $$ = newid("SIGNED"); }
-	| UNSIGNED													{ $$ = newid("UNSIGNED"); }
-	| struct_or_union_specifier					{ $$ = $1; }
-	| enum_specifier										{ $$ = $1; }
-	| TYPE_NAME													{ $$ = newid("TYPE_NAME"); }
+	: VOID															{ $$ = newid("VOID"); if(debug)printf(" --type_specifier : VOID\n"); }
+	| CHAR															{ $$ = newid("CHAR"); if(debug)printf(" --type_specifier : CHAR\n"); }
+	| SHORT															{ $$ = newid("SHORT"); if(debug)printf(" --type_specifier : SHORT\n"); }
+	| INT																{ $$ = newid("INT"); if(debug)printf(" --type_specifier : INT\n"); }
+	| LONG															{ $$ = newid("LONG"); if(debug)printf(" --type_specifier : LONG\n"); }
+	| FLOAT															{ $$ = newid("FLOAT"); if(debug)printf(" --type_specifier : FLOAT\n"); }
+	| DOUBLE														{ $$ = newid("DOUBLE"); if(debug)printf(" --type_specifier : DOUBLE\n"); }
+	| SIGNED														{ $$ = newid("SIGNED"); if(debug)printf(" --type_specifier : SIGNED\n"); }
+	| UNSIGNED													{ $$ = newid("UNSIGNED"); if(debug)printf(" --type_specifier : UNSIGNED\n"); }
+	| struct_or_union_specifier					{ $$ = $1; if(debug)printf(" --type_specifier : struct_or_union_specifier\n"); }
+	| enum_specifier										{ $$ = $1; if(debug)printf(" --type_specifier : enum_specifier\n"); }
+	| TYPE_NAME													{ $$ = newid("TYPE_NAME"); if(debug)printf(" --type_specifier : TYPE_NAME\n"); }
 	;
 
 struct_or_union_specifier
@@ -286,8 +287,8 @@ enumerator_list
 	;
 
 enumerator
-	: IDENTIFIER																			{ $$ = newid("IDENTIFIER"); }
-	| IDENTIFIER '=' constant_expression							{ $$ = $3; }
+	: IDENTIFIER																			{ $$ = newid($1); }
+	| IDENTIFIER '=' constant_expression							{ $$ = newast("=", newid($1), $3); }
 	;
 
 type_qualifier
@@ -296,13 +297,13 @@ type_qualifier
 	;
 
 declarator
-	: pointer direct_declarator
-	| direct_declarator
+	: pointer direct_declarator												{ if(debug)printf(" --declarator : pointer direct_declarator\n"); }
+	| direct_declarator																{ if(debug)printf(" --declarator : direct_declarator\n"); }
 	;
 
 direct_declarator
-	: IDENTIFIER
-	| '(' declarator ')'
+	: IDENTIFIER																			{ $$ = newid($1); if(debug)printf(" --direct_declarator : IDENTIFIER\n"); }
+	| '(' declarator ')'															{ $$ = $2; }
 	| direct_declarator '[' constant_expression ']'
 	| direct_declarator '[' ']'
 	| direct_declarator '(' parameter_type_list ')'
@@ -311,17 +312,16 @@ direct_declarator
 	;
 
 pointer
-	: '*'
-	| '*' type_qualifier_list
-	| '*' pointer
-	| '*' type_qualifier_list pointer
+	: '*'																							{ $$ = newid("*"); }
+	| '*' type_qualifier_list													{ $$ = $2; }
+	| '*' pointer																			{ $$ = $2; }
+	| '*' type_qualifier_list pointer									{ $$ = $2; }
 	;
 
 type_qualifier_list
 	: type_qualifier
 	| type_qualifier_list type_qualifier
 	;
-
 
 parameter_type_list
 	: parameter_list
@@ -389,15 +389,15 @@ statement
 
 labeled_statement
 	: IDENTIFIER ':' statement										{ $$ = $3; }
-	| CASE constant_expression ':' statement			{ $$ = newast("CASE", $2, $4); }
-	| DEFAULT ':' statement												{ $$ = $3; }
+	| CASE constant_expression ':' statement			{ $$ = newast("CASE:", $2, $4); }
+	| DEFAULT ':' statement												{ $$ = newast("DEFAULT:", $3, NULL); }
 	;
 
 compound_statement
 	: '{' '}'																			{														if(debug)printf(" --compound_statement : '{' '}'\n"); }
 	| '{' statement_list '}'											{	$$=$2; 										if(debug)printf(" --compound_statement : '{' statement_list '}'\n"); }
 	| '{' declaration_list '}'										{ $$=$2; 										if(debug)printf(" --compound_statement : '{' declaration_list '}'\n"); }
-	| '{' declaration_list statement_list '}'			{ $$ = newast("STMT", $2, $3); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
+	| '{' declaration_list statement_list '}'			{ $$ = newast("STMTLIST", $2, $3); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
 	;
 
 declaration_list
@@ -411,8 +411,8 @@ statement_list
 	;
 
 expression_statement
-	: ';'																					{						if(debug)printf(" --expression_statement : ;\n"); }
-	| expression ';'															{						if(debug)printf(" --expression_statement : expression ';'\n"); }
+	: ';'																					{	$$ = newid(";");	if(debug)printf(" --expression_statement : ;\n"); }
+	| expression ';'															{	$$ = $1;					if(debug)printf(" --expression_statement : expression ';'\n"); }
 	;
 
 selection_statement
@@ -424,15 +424,15 @@ selection_statement
 iteration_statement
 	: WHILE '(' expression ')' statement																					{ $$ = newast("WHILE", $3, $5); if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
 	| DO statement WHILE '(' expression ')' ';'																		{ $$ = newast("DOWHILE", $2, $5); if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
-	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("FOR", $6, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
-	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("FOR", $7, NULL); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("FOR", $4, $6); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("FOR", $4, $7); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
 	;
 
 jump_statement
 	: GOTO IDENTIFIER ';'																											{ 					if(debug)printf(" --jump_statement : GOTO IDENTIFIER ';'\n"); }
-	| CONTINUE ';'																														{ 					if(debug)printf(" --jump_statement : CONTINUE ';'\n"); }
-	| BREAK ';'																																{ 					if(debug)printf(" --jump_statement : BREAK ';'\n"); }
-	| RETURN ';'																															{ 					if(debug)printf(" --jump_statement : RETURN ';'\n"); }
+	| CONTINUE ';'																														{ $$ = newid("CONTINUE");	if(debug)printf(" --jump_statement : CONTINUE ';'\n"); }
+	| BREAK ';'																																{ $$ = newid("BREAK");	if(debug)printf(" --jump_statement : BREAK ';'\n"); }
+	| RETURN ';'																															{ $$ = newid("RETURN");	if(debug)printf(" --jump_statement : RETURN ';'\n"); }
 	| RETURN expression ';'																										{ $$ = $2;	if(debug)printf(" --jump_statement : RETURN expression ';'\n"); }
 	;
 	
@@ -460,7 +460,6 @@ function_definition
 %%
 #include <stdio.h>
 
-//extern char yytext[];
 extern int column;
 
 int yyerror(struct ast **astree, char *s)
@@ -469,39 +468,11 @@ int yyerror(struct ast **astree, char *s)
 	printf("\n%*s\n%*s\n", column, "^", column, s);
 }
 
-void write_node(struct ast *e, FILE *dotfile, int node, int parent){
-	printf("NODE\n");
-  fprintf(dotfile, " %d -> %d;\n", parent, node);
-  write_tree(e, dotfile, node);
-}
-
-void write_tree(struct ast *e, FILE *dotfile, int node){
-	printf("TREE\n");
-	if (e->nodetype == 'C')
-		fprintf(dotfile, " %d [label=\"%.2f\"];\n", node, e->d);
-	else if (e->nodetype == 'I')
-		fprintf(dotfile, " %d [label=\"%s\"];\n", node, e->id);
-	else if (e->nodetype == 'D')
-		fprintf(dotfile, " %d [label=\"%s\"];\n", node, e->id);
-		
-  if (e->l != NULL)
-		write_node(e->l, dotfile, 2*node, node);
-  if (e->r != NULL)
-		write_node(e->r, dotfile, 2*node+1, node);
-}
-
-void write_graphviz(struct ast *e){
-  FILE *dotfile = fopen("test_function.dot", "w");
-  fprintf(dotfile, "digraph tree {\n");
-  write_tree(e, dotfile, 1);
-  fprintf(dotfile, "}\n");
-  fclose(dotfile);
-}
 
 int main(int argc, char **argv)
 {
 	int i, yyresult;
-	
+
 	for(i=1;i<argc;i++) {
 		if (*argv[i]=='-') {
 			switch(*(argv[i]+1)) {
@@ -510,10 +481,14 @@ int main(int argc, char **argv)
 					output_filename=argv[i]+2;
           break;
 
-       /********************************/
+			 /********************************/
        /* specify your own option here */
-       /********************************/
-
+       /********************************/					
+				
+				case 'd':
+					debug = 1;
+					break;
+					
        default:
           fprintf(stderr,"%s: unknown argument option\n",argv[0]);
           exit(1);
@@ -545,9 +520,9 @@ int main(int argc, char **argv)
 	} else
 		fprintf(stdout,"\n\nNo errors detected.\n");
 
-	write_graphviz(astree);	
+	generate_dot(astree);	
 
-	treefree(astree);
+	free_tree(astree);
 	
 	exit(yyresult);
 }

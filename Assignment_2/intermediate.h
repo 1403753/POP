@@ -12,21 +12,20 @@ struct ast {
 
 /* build an AST */
 // decision node
-struct ast *newast(char *nodetype, struct ast *l, struct ast *r);
+struct ast *newast(char *id, struct ast *l, struct ast *r);
 
 // leaf
 struct ast *newnum(double d);
 struct ast *newid(char *id);
 
-/* evaluate an AST */
-double eval(struct ast *e, int node, int parent);
+/* generate the dot file for the AST */
+void generate_dot(struct ast *e);
 
-void write_graphviz(struct ast *e);
-void write_tree(struct ast *e, FILE *dotfile, int node);
+/* annotated functions for recursive calls */
+void write_tree(struct ast *e, FILE *dotfile, int nodenum);
+void write_node(struct ast *e, FILE *dotfile, int nodenum, int parentnum);
 
-/* delete and free an AST */
-void treefree(struct ast *);
+/* delete and free the AST */
+void free_tree(struct ast *);
 
 #endif // INTERMEDIATE_H
-
-
