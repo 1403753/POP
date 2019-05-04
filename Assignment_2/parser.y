@@ -223,18 +223,18 @@ storage_class_specifier
 	;
 
 type_specifier
-	: VOID															{ $$ = newid("VOID"); if(debug)printf(" --type_specifier : VOID\n"); }
-	| CHAR															{ $$ = newid("CHAR"); if(debug)printf(" --type_specifier : CHAR\n"); }
-	| SHORT															{ $$ = newid("SHORT"); if(debug)printf(" --type_specifier : SHORT\n"); }
-	| INT																{ $$ = newid("INT"); if(debug)printf(" --type_specifier : INT\n"); }
-	| LONG															{ $$ = newid("LONG"); if(debug)printf(" --type_specifier : LONG\n"); }
-	| FLOAT															{ $$ = newid("FLOAT"); if(debug)printf(" --type_specifier : FLOAT\n"); }
-	| DOUBLE														{ $$ = newid("DOUBLE"); if(debug)printf(" --type_specifier : DOUBLE\n"); }
-	| SIGNED														{ $$ = newid("SIGNED"); if(debug)printf(" --type_specifier : SIGNED\n"); }
-	| UNSIGNED													{ $$ = newid("UNSIGNED"); if(debug)printf(" --type_specifier : UNSIGNED\n"); }
+	: VOID															{	if(debug)printf(" --type_specifier : VOID\n"); }
+	| CHAR															{ if(debug)printf(" --type_specifier : CHAR\n"); }
+	| SHORT															{ if(debug)printf(" --type_specifier : SHORT\n"); }
+	| INT																{ if(debug)printf(" --type_specifier : INT\n"); }
+	| LONG															{ if(debug)printf(" --type_specifier : LONG\n"); }
+	| FLOAT															{ if(debug)printf(" --type_specifier : FLOAT\n"); }
+	| DOUBLE														{ if(debug)printf(" --type_specifier : DOUBLE\n"); }
+	| SIGNED														{ if(debug)printf(" --type_specifier : SIGNED\n"); }
+	| UNSIGNED													{ if(debug)printf(" --type_specifier : UNSIGNED\n"); }
 	| struct_or_union_specifier					{ $$ = $1; if(debug)printf(" --type_specifier : struct_or_union_specifier\n"); }
 	| enum_specifier										{ $$ = $1; if(debug)printf(" --type_specifier : enum_specifier\n"); }
-	| TYPE_NAME													{ $$ = newid("TYPE_NAME"); if(debug)printf(" --type_specifier : TYPE_NAME\n"); }
+	| TYPE_NAME													{ if(debug)printf(" --type_specifier : TYPE_NAME\n"); }
 	;
 
 struct_or_union_specifier
@@ -519,7 +519,7 @@ int main(int argc, char **argv)
 		exit(yyresult);
 	} else
 		fprintf(stdout,"\n\nNo errors detected.\n");
-
+		
 	generate_dot(astree);	
 
 	free_tree(astree);
