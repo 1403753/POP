@@ -27,7 +27,7 @@ struct ast *newast(char *id, struct ast *l, struct ast *r)
     yyerror("out of space");
     exit(0);
   }
-  strncpy(a->id, id, strlen(id));
+  strcpy(a->id, id);
   a->nodetype = 'D';
   a->l = l;
   a->r = r;
@@ -58,7 +58,7 @@ struct ast *newid(char *id)
     exit(0);
   }
   a->nodetype = 'I';
-  strncpy(a->id, id, strlen(id));
+  strcpy(a->id, id);
 	a->l = NULL;
 	a->r = NULL;
 	

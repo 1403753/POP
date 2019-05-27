@@ -67,8 +67,8 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP
-	| postfix_expression DEC_OP
+	| postfix_expression INC_OP															{ $$ = newast("++", $1, NULL); if(debug)printf(" --postfix_expression : postfix_expression INC_OP\n"); }
+	| postfix_expression DEC_OP															{ $$ = newast("--", $1, NULL); if(debug)printf(" --postfix_expression : postfix_expression DEC_OP\n"); }
 	;
 
 argument_expression_list
@@ -78,8 +78,8 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression   																	{ $$ = $1; if(debug)printf(" --unary_expression : postfix_expression\n"); }
-	| INC_OP unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : INC_OP unary_expression\n"); }
-	| DEC_OP unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : DEC_OP unary_expression\n"); }
+	| INC_OP unary_expression																{ $$ = newast("++", NULL, $2); if(debug)printf(" --unary_expression : INC_OP unary_expression\n"); }
+	| DEC_OP unary_expression																{ $$ = newast("--", NULL, $2); if(debug)printf(" --unary_expression : DEC_OP unary_expression\n"); }
 	| unary_operator cast_expression												{ $$ = newast("unary/cast", $1, $2); }
 	| SIZEOF unary_expression																{ $$ = $2; if(debug)printf(" --unary_expression : SIZEOF unary_expression\n");}
 	| SIZEOF '(' type_name ')'															{ $$ = $3; if(debug)printf(" --unary_expression : SIZEOF '(' type_name ')'\n");}
@@ -424,8 +424,8 @@ selection_statement
 iteration_statement
 	: WHILE '(' expression ')' statement																					{ $$ = newast("WHILE", $3, $5); if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
 	| DO statement WHILE '(' expression ')' ';'																		{ $$ = newast("DOWHILE", $2, $5); if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
-	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("FOR", $4, $6); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
-	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("FOR", $4, $7); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement ')' statement							{ $$ = newast("FOR", newast("COND", $3, $4), $6); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
+	| FOR '(' expression_statement expression_statement expression ')' statement	{ $$ = newast("FOR", newast("STEPSIZE", newast("INIT / COND", $3, $4), $5), $7); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
 	;
 
 jump_statement

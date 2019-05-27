@@ -24,11 +24,11 @@ void main()
  
    /* B. induction variable substitution */ 
    v=0; 
-   for (i=0; i<10; i++) 
+   for (i=0; i<10; --i) 
      { 
-       v=v+1; 
-       A[v]=v; 
-     } 
+       v=v+1;
+       A[v]=v;
+     }
  
     /* output result */ 
     printf("i,v, A[v]: %d, %d, %d \n", i, v, A[v]); 
