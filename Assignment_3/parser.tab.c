@@ -1754,830 +1754,836 @@ yyreduce:
 #line 1755 "parser.tab.c" /* yacc.c:1646  */
     break;
 
+  case 7:
+#line 65 "parser.y" /* yacc.c:1646  */
+    { (yyval.astree) = newast("[]", (yyvsp[-3].astree), (yyvsp[-1].astree)); if(debug)printf(" --postfix_expression : postfix_expression '[' expression ']'\n"); }
+#line 1761 "parser.tab.c" /* yacc.c:1646  */
+    break;
+
   case 14:
 #line 75 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --argument_expression_list : assignment_expression\n"); }
-#line 1761 "parser.tab.c" /* yacc.c:1646  */
+#line 1767 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
 #line 76 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(",", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --argument_expression_list : argument_expression_list ',' assignment_expression\n"); }
-#line 1767 "parser.tab.c" /* yacc.c:1646  */
+#line 1773 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 80 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --unary_expression : postfix_expression\n"); }
-#line 1773 "parser.tab.c" /* yacc.c:1646  */
+#line 1779 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 81 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --unary_expression : INC_OP unary_expression\n"); }
-#line 1779 "parser.tab.c" /* yacc.c:1646  */
+#line 1785 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 82 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --unary_expression : DEC_OP unary_expression\n"); }
-#line 1785 "parser.tab.c" /* yacc.c:1646  */
+#line 1791 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 83 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("unary/cast", (yyvsp[-1].astree), (yyvsp[0].astree)); }
-#line 1791 "parser.tab.c" /* yacc.c:1646  */
+#line 1797 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 84 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --unary_expression : SIZEOF unary_expression\n");}
-#line 1797 "parser.tab.c" /* yacc.c:1646  */
+#line 1803 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 85 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[-1].astree); if(debug)printf(" --unary_expression : SIZEOF '(' type_name ')'\n");}
-#line 1803 "parser.tab.c" /* yacc.c:1646  */
+#line 1809 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 89 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1809 "parser.tab.c" /* yacc.c:1646  */
+#line 1815 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 90 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1815 "parser.tab.c" /* yacc.c:1646  */
+#line 1821 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 91 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1821 "parser.tab.c" /* yacc.c:1646  */
+#line 1827 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 92 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1827 "parser.tab.c" /* yacc.c:1646  */
+#line 1833 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 93 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1833 "parser.tab.c" /* yacc.c:1646  */
+#line 1839 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 94 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 1839 "parser.tab.c" /* yacc.c:1646  */
+#line 1845 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
 #line 98 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --cast_expression : unary_expression\n"); }
-#line 1845 "parser.tab.c" /* yacc.c:1646  */
+#line 1851 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 99 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --cast_expression : '(' type_name ')' cast_expression\n"); }
-#line 1851 "parser.tab.c" /* yacc.c:1646  */
+#line 1857 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
 #line 103 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --multiplicative_expression : cast_expression\n"); }
-#line 1857 "parser.tab.c" /* yacc.c:1646  */
+#line 1863 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
 #line 104 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newast("*", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --multiplicative_expression : multiplicative_expression '*' cast_expression\n"); }
-#line 1863 "parser.tab.c" /* yacc.c:1646  */
+#line 1869 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 105 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newast("/", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --multiplicative_expression : multiplicative_expression '/' cast_expression\n"); }
-#line 1869 "parser.tab.c" /* yacc.c:1646  */
+#line 1875 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 106 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newast("%", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --multiplicative_expression : multiplicative_expression 'prozent' cast_expression\n"); }
-#line 1875 "parser.tab.c" /* yacc.c:1646  */
+#line 1881 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 110 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --additive_expression : multiplicative_expression\n");}
-#line 1881 "parser.tab.c" /* yacc.c:1646  */
+#line 1887 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 111 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("+", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --additive_expression : additive_expression '+' multiplicative_expression\n"); }
-#line 1887 "parser.tab.c" /* yacc.c:1646  */
+#line 1893 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
 #line 112 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newast("-", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --additive_expression : additive_expression '-' multiplicative_expression\n"); }
-#line 1893 "parser.tab.c" /* yacc.c:1646  */
+#line 1899 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 116 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --shift_expression : additive_expression\n"); }
-#line 1899 "parser.tab.c" /* yacc.c:1646  */
+#line 1905 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
 #line 117 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --shift_expression : shift_expression LEFT_OP additive_expression\n"); }
-#line 1905 "parser.tab.c" /* yacc.c:1646  */
+#line 1911 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 118 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --shift_expression : shift_expression RIGHT_OP additive_expression\n"); }
-#line 1911 "parser.tab.c" /* yacc.c:1646  */
+#line 1917 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
 #line 122 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --relational_expression : shift_expression\n"); }
-#line 1917 "parser.tab.c" /* yacc.c:1646  */
+#line 1923 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 123 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("<", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --relational_expression : relational_expression '<' shift_expression\n"); }
-#line 1923 "parser.tab.c" /* yacc.c:1646  */
+#line 1929 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 124 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(">", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --relational_expression : relational_expression '>' shift_expression\n"); }
-#line 1929 "parser.tab.c" /* yacc.c:1646  */
+#line 1935 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 125 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("<=", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --relational_expression : relational_expression LE_OP shift_expression\n"); }
-#line 1935 "parser.tab.c" /* yacc.c:1646  */
+#line 1941 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 126 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(">=", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --relational_expression : relational_expression GE_OP shift_expression\n"); }
-#line 1941 "parser.tab.c" /* yacc.c:1646  */
+#line 1947 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
 #line 130 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --equality_expression : relational_expression\n"); }
-#line 1947 "parser.tab.c" /* yacc.c:1646  */
+#line 1953 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 131 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("==", (yyvsp[-2].astree), (yyvsp[0].astree)); }
-#line 1953 "parser.tab.c" /* yacc.c:1646  */
+#line 1959 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 132 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("!=", (yyvsp[-2].astree), (yyvsp[0].astree)); }
-#line 1959 "parser.tab.c" /* yacc.c:1646  */
+#line 1965 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 136 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --and_expression : equality_expression\n"); }
-#line 1965 "parser.tab.c" /* yacc.c:1646  */
+#line 1971 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 141 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --exclusive_or_expression : and_expression\n"); }
-#line 1971 "parser.tab.c" /* yacc.c:1646  */
+#line 1977 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 146 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --inclusive_or_expression : exclusive_or_expression\n"); }
-#line 1977 "parser.tab.c" /* yacc.c:1646  */
+#line 1983 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 151 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --logical_and_expression : inclusive_or_expression\n"); }
-#line 1983 "parser.tab.c" /* yacc.c:1646  */
+#line 1989 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
 #line 156 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --logical_or_expression : logical_and_expression\n"); }
-#line 1989 "parser.tab.c" /* yacc.c:1646  */
+#line 1995 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
 #line 161 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --conditional_expression : logical_or_expression\n"); }
-#line 1995 "parser.tab.c" /* yacc.c:1646  */
+#line 2001 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
 #line 166 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --assignment_expression : conditional_expression\n"); }
-#line 2001 "parser.tab.c" /* yacc.c:1646  */
+#line 2007 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
 #line 167 "parser.y" /* yacc.c:1646  */
-    { if(debug)printf(" --assignment_expression : unary_expression assignment_operator assignment_expression\n"); }
-#line 2007 "parser.tab.c" /* yacc.c:1646  */
+    {	(yyval.astree) = newast("=", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --assignment_expression : unary_expression assignment_operator assignment_expression\n"); }
+#line 2013 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
 #line 185 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --expression : assignment_expression\n"); }
-#line 2013 "parser.tab.c" /* yacc.c:1646  */
+#line 2019 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
 #line 186 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(",", (yyvsp[-2].astree), (yyvsp[0].astree));	if(debug)printf(" --expression : expression ',' assignment_expression\n"); }
-#line 2019 "parser.tab.c" /* yacc.c:1646  */
+#line 2025 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
 #line 190 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --constant_expression : conditional_expression\n"); }
-#line 2025 "parser.tab.c" /* yacc.c:1646  */
+#line 2031 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
 #line 194 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration : declaration_specifiers ';'\n"); }
-#line 2031 "parser.tab.c" /* yacc.c:1646  */
+#line 2037 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
 #line 195 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("DECL", (yyvsp[-2].astree), (yyvsp[-1].astree)); if(debug)printf(" --declaration : declaration_specifiers init_declarator_list ';'\n"); }
-#line 2037 "parser.tab.c" /* yacc.c:1646  */
+#line 2043 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
 #line 199 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : storage_class_specifier\n"); }
-#line 2043 "parser.tab.c" /* yacc.c:1646  */
+#line 2049 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
 #line 200 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : storage_class_specifier declaration_specifiers\n"); }
-#line 2049 "parser.tab.c" /* yacc.c:1646  */
+#line 2055 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
 #line 201 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : type_specifier\n"); }
-#line 2055 "parser.tab.c" /* yacc.c:1646  */
+#line 2061 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
 #line 202 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : type_specifier declaration_specifiers\n"); }
-#line 2061 "parser.tab.c" /* yacc.c:1646  */
+#line 2067 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
 #line 203 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : type_qualifier\n"); }
-#line 2067 "parser.tab.c" /* yacc.c:1646  */
+#line 2073 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
 #line 204 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declaration_specifiers : type_qualifier declaration_specifiers\n"); }
-#line 2073 "parser.tab.c" /* yacc.c:1646  */
+#line 2079 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
 #line 208 "parser.y" /* yacc.c:1646  */
     { 														 if(debug)printf(" --init_declarator_list : init_declarator\n"); }
-#line 2079 "parser.tab.c" /* yacc.c:1646  */
+#line 2085 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
 #line 209 "parser.y" /* yacc.c:1646  */
-    { (yyval.astree) = newast("DECL", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
-#line 2085 "parser.tab.c" /* yacc.c:1646  */
+    { (yyval.astree) = newast("DECLS", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
+#line 2091 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
 #line 213 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --init_declarator : declarator\n"); }
-#line 2091 "parser.tab.c" /* yacc.c:1646  */
+#line 2097 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
 #line 214 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("=", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --init_declarator : declarator '=' initializer\n"); }
-#line 2097 "parser.tab.c" /* yacc.c:1646  */
+#line 2103 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
 #line 218 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("TYPEDEF"); }
-#line 2103 "parser.tab.c" /* yacc.c:1646  */
+#line 2109 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 219 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("EXTERN"); }
-#line 2109 "parser.tab.c" /* yacc.c:1646  */
+#line 2115 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
 #line 220 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("STATIC"); }
-#line 2115 "parser.tab.c" /* yacc.c:1646  */
+#line 2121 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
 #line 221 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("AUTO"); }
-#line 2121 "parser.tab.c" /* yacc.c:1646  */
+#line 2127 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
 #line 222 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("REGISTER"); }
-#line 2127 "parser.tab.c" /* yacc.c:1646  */
+#line 2133 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
 #line 226 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newid("VOID"); if(debug)printf(" --type_specifier : VOID\n"); }
-#line 2133 "parser.tab.c" /* yacc.c:1646  */
+#line 2139 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
 #line 227 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("CHAR"); if(debug)printf(" --type_specifier : CHAR\n"); }
-#line 2139 "parser.tab.c" /* yacc.c:1646  */
+#line 2145 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
 #line 228 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("SHORT"); if(debug)printf(" --type_specifier : SHORT\n"); }
-#line 2145 "parser.tab.c" /* yacc.c:1646  */
+#line 2151 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
 #line 229 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("INT"); if(debug)printf(" --type_specifier : INT\n"); }
-#line 2151 "parser.tab.c" /* yacc.c:1646  */
+#line 2157 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
 #line 230 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("LONG"); if(debug)printf(" --type_specifier : LONG\n"); }
-#line 2157 "parser.tab.c" /* yacc.c:1646  */
+#line 2163 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
 #line 231 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("FLOAT"); if(debug)printf(" --type_specifier : FLOAT\n"); }
-#line 2163 "parser.tab.c" /* yacc.c:1646  */
+#line 2169 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
 #line 232 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("DOUBLE"); if(debug)printf(" --type_specifier : DOUBLE\n"); }
-#line 2169 "parser.tab.c" /* yacc.c:1646  */
+#line 2175 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
 #line 233 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("SIGNED"); if(debug)printf(" --type_specifier : SIGNED\n"); }
-#line 2175 "parser.tab.c" /* yacc.c:1646  */
+#line 2181 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
 #line 234 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("UNSIGNED"); if(debug)printf(" --type_specifier : UNSIGNED\n"); }
-#line 2181 "parser.tab.c" /* yacc.c:1646  */
+#line 2187 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
 #line 235 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --type_specifier : struct_or_union_specifier\n"); }
-#line 2187 "parser.tab.c" /* yacc.c:1646  */
+#line 2193 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
 #line 236 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --type_specifier : enum_specifier\n"); }
-#line 2193 "parser.tab.c" /* yacc.c:1646  */
+#line 2199 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
 #line 237 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("TYPE_NAME"); if(debug)printf(" --type_specifier : TYPE_NAME\n"); }
-#line 2199 "parser.tab.c" /* yacc.c:1646  */
+#line 2205 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
 #line 247 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("STRUCT"); }
-#line 2205 "parser.tab.c" /* yacc.c:1646  */
+#line 2211 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
 #line 248 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("UNION"); }
-#line 2211 "parser.tab.c" /* yacc.c:1646  */
+#line 2217 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 122:
 #line 279 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[-1].astree); }
-#line 2217 "parser.tab.c" /* yacc.c:1646  */
+#line 2223 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 123:
 #line 280 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = (yyvsp[-1].astree); }
-#line 2223 "parser.tab.c" /* yacc.c:1646  */
+#line 2229 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 124:
 #line 281 "parser.y" /* yacc.c:1646  */
     {					 }
-#line 2229 "parser.tab.c" /* yacc.c:1646  */
+#line 2235 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 127:
 #line 290 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); }
-#line 2235 "parser.tab.c" /* yacc.c:1646  */
+#line 2241 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 128:
 #line 291 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("=", newid((yyvsp[-2].id)), (yyvsp[0].astree)); }
-#line 2241 "parser.tab.c" /* yacc.c:1646  */
+#line 2247 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 129:
 #line 295 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("CONST"); }
-#line 2247 "parser.tab.c" /* yacc.c:1646  */
+#line 2253 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 130:
 #line 296 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("VOLATILE"); }
-#line 2253 "parser.tab.c" /* yacc.c:1646  */
+#line 2259 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 131:
 #line 300 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declarator : pointer direct_declarator\n"); }
-#line 2259 "parser.tab.c" /* yacc.c:1646  */
+#line 2265 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 132:
 #line 301 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --declarator : direct_declarator\n"); }
-#line 2265 "parser.tab.c" /* yacc.c:1646  */
+#line 2271 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 133:
 #line 305 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid((yyvsp[0].id)); if(debug)printf(" --direct_declarator : IDENTIFIER\n"); }
-#line 2271 "parser.tab.c" /* yacc.c:1646  */
+#line 2277 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 134:
 #line 306 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[-1].astree); }
-#line 2277 "parser.tab.c" /* yacc.c:1646  */
+#line 2283 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 135:
 #line 307 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("[]", (yyvsp[-3].astree), (yyvsp[-1].astree)); }
-#line 2283 "parser.tab.c" /* yacc.c:1646  */
+#line 2289 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 140:
 #line 315 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("*"); }
-#line 2289 "parser.tab.c" /* yacc.c:1646  */
+#line 2295 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 141:
 #line 316 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); }
-#line 2295 "parser.tab.c" /* yacc.c:1646  */
+#line 2301 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 142:
 #line 317 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); }
-#line 2301 "parser.tab.c" /* yacc.c:1646  */
+#line 2307 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 143:
 #line 318 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[-1].astree); }
-#line 2307 "parser.tab.c" /* yacc.c:1646  */
+#line 2313 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 169:
 #line 371 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --initializer : assignment_expression\n"); }
-#line 2313 "parser.tab.c" /* yacc.c:1646  */
+#line 2319 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 170:
 #line 372 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --initializer : '{' initializer_list '}'\n"); }
-#line 2319 "parser.tab.c" /* yacc.c:1646  */
+#line 2325 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 171:
 #line 373 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --initializer : '{' initializer_list ',' '}'\n"); }
-#line 2325 "parser.tab.c" /* yacc.c:1646  */
+#line 2331 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 172:
 #line 377 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --initializer_list : initializer\n"); }
-#line 2331 "parser.tab.c" /* yacc.c:1646  */
+#line 2337 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 173:
 #line 378 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(",", (yyvsp[-2].astree), (yyvsp[0].astree));  if(debug)printf(" --initializer_list : initializer_list ',' initializer\n"); }
-#line 2337 "parser.tab.c" /* yacc.c:1646  */
+#line 2343 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 174:
 #line 382 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : labeled_statement\n"); }
-#line 2343 "parser.tab.c" /* yacc.c:1646  */
+#line 2349 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 175:
 #line 383 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : compound_statement\n"); }
-#line 2349 "parser.tab.c" /* yacc.c:1646  */
+#line 2355 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 176:
 #line 384 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : expression_statement\n"); }
-#line 2355 "parser.tab.c" /* yacc.c:1646  */
+#line 2361 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 177:
 #line 385 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : selection_statement\n"); }
-#line 2361 "parser.tab.c" /* yacc.c:1646  */
+#line 2367 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 178:
 #line 386 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : iteration_statement\n"); }
-#line 2367 "parser.tab.c" /* yacc.c:1646  */
+#line 2373 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 179:
 #line 387 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement : jump_statement\n"); }
-#line 2373 "parser.tab.c" /* yacc.c:1646  */
+#line 2379 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 180:
 #line 391 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); }
-#line 2379 "parser.tab.c" /* yacc.c:1646  */
+#line 2385 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 181:
 #line 392 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("CASE:", (yyvsp[-2].astree), (yyvsp[0].astree)); }
-#line 2385 "parser.tab.c" /* yacc.c:1646  */
+#line 2391 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 182:
 #line 393 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("DEFAULT:", (yyvsp[0].astree), NULL); }
-#line 2391 "parser.tab.c" /* yacc.c:1646  */
+#line 2397 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 183:
 #line 397 "parser.y" /* yacc.c:1646  */
     {														if(debug)printf(" --compound_statement : '{' '}'\n"); }
-#line 2397 "parser.tab.c" /* yacc.c:1646  */
+#line 2403 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 184:
 #line 398 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree)=(yyvsp[-1].astree); 										if(debug)printf(" --compound_statement : '{' statement_list '}'\n"); }
-#line 2403 "parser.tab.c" /* yacc.c:1646  */
+#line 2409 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 185:
 #line 399 "parser.y" /* yacc.c:1646  */
     { (yyval.astree)=(yyvsp[-1].astree); 										if(debug)printf(" --compound_statement : '{' declaration_list '}'\n"); }
-#line 2409 "parser.tab.c" /* yacc.c:1646  */
+#line 2415 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 186:
 #line 400 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("STMTLIST", (yyvsp[-2].astree), (yyvsp[-1].astree)); if(debug)printf(" --compound_statement : '{' declaration_list statement_list '}'\n"); }
-#line 2415 "parser.tab.c" /* yacc.c:1646  */
+#line 2421 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 187:
 #line 404 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --declaration_list : declaration\n"); }
-#line 2421 "parser.tab.c" /* yacc.c:1646  */
+#line 2427 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 188:
 #line 405 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("DECL", (yyvsp[-1].astree), (yyvsp[0].astree)); if(debug)printf(" --declaration_list : declaration_list declaration\n"); }
-#line 2427 "parser.tab.c" /* yacc.c:1646  */
+#line 2433 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 189:
 #line 409 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --statement_list : statement\n"); }
-#line 2433 "parser.tab.c" /* yacc.c:1646  */
+#line 2439 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 190:
 #line 410 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("STMT", (yyvsp[-1].astree), (yyvsp[0].astree)); if(debug)printf(" --statement_list : statement_list statement\n"); }
-#line 2439 "parser.tab.c" /* yacc.c:1646  */
+#line 2445 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 191:
 #line 414 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = newid(";");	if(debug)printf(" --expression_statement : ;\n"); }
-#line 2445 "parser.tab.c" /* yacc.c:1646  */
+#line 2451 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 192:
 #line 415 "parser.y" /* yacc.c:1646  */
     {	(yyval.astree) = (yyvsp[-1].astree);					if(debug)printf(" --expression_statement : expression ';'\n"); }
-#line 2451 "parser.tab.c" /* yacc.c:1646  */
+#line 2457 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 193:
 #line 419 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("IF", (yyvsp[-2].astree), (yyvsp[0].astree)); }
-#line 2457 "parser.tab.c" /* yacc.c:1646  */
+#line 2463 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 194:
 #line 420 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("IF", (yyvsp[-4].astree), newast("<-IF | ELSE->", (yyvsp[-2].astree), (yyvsp[0].astree))); }
-#line 2463 "parser.tab.c" /* yacc.c:1646  */
+#line 2469 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 195:
 #line 421 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("SWITCH", (yyvsp[-2].astree), (yyvsp[0].astree)); }
-#line 2469 "parser.tab.c" /* yacc.c:1646  */
+#line 2475 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 196:
 #line 425 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("WHILE", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --iteration_statement : WHILE '(' expression ')' statement\n"); }
-#line 2475 "parser.tab.c" /* yacc.c:1646  */
+#line 2481 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 197:
 #line 426 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("DOWHILE", (yyvsp[-5].astree), (yyvsp[-2].astree)); if(debug)printf(" --iteration_statement : DO statement WHILE '(' expression ')' ';'\n"); }
-#line 2481 "parser.tab.c" /* yacc.c:1646  */
+#line 2487 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 198:
 #line 427 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("FOR", (yyvsp[-2].astree), (yyvsp[0].astree)); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement ')' statement\n"); }
-#line 2487 "parser.tab.c" /* yacc.c:1646  */
+#line 2493 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 199:
 #line 428 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast("FOR", (yyvsp[-3].astree), (yyvsp[0].astree)); if(debug)printf(" --iteration_statement : FOR '(' expression_statement expression_statement expression ')' statement\n"); }
-#line 2493 "parser.tab.c" /* yacc.c:1646  */
+#line 2499 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 200:
 #line 432 "parser.y" /* yacc.c:1646  */
     { 					if(debug)printf(" --jump_statement : GOTO IDENTIFIER ';'\n"); }
-#line 2499 "parser.tab.c" /* yacc.c:1646  */
+#line 2505 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 201:
 #line 433 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("CONTINUE");	if(debug)printf(" --jump_statement : CONTINUE ';'\n"); }
-#line 2505 "parser.tab.c" /* yacc.c:1646  */
+#line 2511 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 202:
 #line 434 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("BREAK");	if(debug)printf(" --jump_statement : BREAK ';'\n"); }
-#line 2511 "parser.tab.c" /* yacc.c:1646  */
+#line 2517 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 203:
 #line 435 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newid("RETURN");	if(debug)printf(" --jump_statement : RETURN ';'\n"); }
-#line 2517 "parser.tab.c" /* yacc.c:1646  */
+#line 2523 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 204:
 #line 436 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[-1].astree);	if(debug)printf(" --jump_statement : RETURN expression ';'\n"); }
-#line 2523 "parser.tab.c" /* yacc.c:1646  */
+#line 2529 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 205:
 #line 440 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --translation_unit : external_declaration\n"); }
-#line 2529 "parser.tab.c" /* yacc.c:1646  */
+#line 2535 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 206:
 #line 441 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = newast(";", (yyvsp[-1].astree), (yyvsp[0].astree)); if(debug)printf(" --translation_unit : translation_unit external_declaration\n"); }
-#line 2535 "parser.tab.c" /* yacc.c:1646  */
+#line 2541 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 207:
 #line 445 "parser.y" /* yacc.c:1646  */
     { *astree = (yyvsp[0].astree); if(debug)printf(" --external_declaration : parse_tree\n"); }
-#line 2541 "parser.tab.c" /* yacc.c:1646  */
+#line 2547 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 208:
 #line 449 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --parse_tree : function_definition\n"); }
-#line 2547 "parser.tab.c" /* yacc.c:1646  */
+#line 2553 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 209:
 #line 450 "parser.y" /* yacc.c:1646  */
     { if(debug)printf(" --parse_tree : declaration\n"); }
-#line 2553 "parser.tab.c" /* yacc.c:1646  */
+#line 2559 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 210:
 #line 454 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --function_definition : declaration_specifiers declarator declaration_list compound_statement\n"); }
-#line 2559 "parser.tab.c" /* yacc.c:1646  */
+#line 2565 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 211:
 #line 455 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --function_definition : declaration_specifiers declarator compound_statement\n"); }
-#line 2565 "parser.tab.c" /* yacc.c:1646  */
+#line 2571 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 212:
 #line 456 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --function_definition : declarator declaration_list compound_statement\n"); }
-#line 2571 "parser.tab.c" /* yacc.c:1646  */
+#line 2577 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 213:
 #line 457 "parser.y" /* yacc.c:1646  */
     { (yyval.astree) = (yyvsp[0].astree); if(debug)printf(" --function_definition : declarator compound_statement\n"); }
-#line 2577 "parser.tab.c" /* yacc.c:1646  */
+#line 2583 "parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2581 "parser.tab.c" /* yacc.c:1646  */
+#line 2587 "parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

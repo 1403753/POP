@@ -62,7 +62,7 @@ primary_expression
 
 postfix_expression 
 	: primary_expression 																		{ if(debug)printf(" --postfix_expression : primary_expression\n"); }
-	| postfix_expression '[' expression ']'
+	| postfix_expression '[' expression ']'									{ $$ = newast("[]", $1, $3); if(debug)printf(" --postfix_expression : postfix_expression '[' expression ']'\n"); }
 	| postfix_expression '(' ')'
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
@@ -164,7 +164,7 @@ conditional_expression
 
 assignment_expression
 	: conditional_expression																					{ if(debug)printf(" --assignment_expression : conditional_expression\n"); }
-	| unary_expression assignment_operator assignment_expression			{ if(debug)printf(" --assignment_expression : unary_expression assignment_operator assignment_expression\n"); }
+	| unary_expression assignment_operator assignment_expression			{	$$ = newast("=", $1, $3); if(debug)printf(" --assignment_expression : unary_expression assignment_operator assignment_expression\n"); }
 	;
 
 assignment_operator
@@ -206,7 +206,7 @@ declaration_specifiers
 
 init_declarator_list
 	: init_declarator																				{ 														 if(debug)printf(" --init_declarator_list : init_declarator\n"); }
-	| init_declarator_list ',' init_declarator							{ $$ = newast("DECL", $1, $3); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
+	| init_declarator_list ',' init_declarator							{ $$ = newast("DECLS", $1, $3); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
 	;
 
 init_declarator
