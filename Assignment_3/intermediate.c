@@ -44,6 +44,9 @@ struct ast *newnum(double d)
   }
   a->nodetype = 'C';
   a->d = d;
+	char str[20];
+	sprintf(str,"%f", d);
+	strcpy(a->id, str);
 	a->l = NULL;
 	a->r = NULL;
 	
@@ -98,4 +101,38 @@ void free_tree(struct ast *a)
 		free_tree(a->l);
 		free_tree(a->r);
 		free(a);
+}
+
+void print_tree(struct ast *a)
+{
+	if (a == NULL) return;
+	if (!strcmp(a->id, "STMTLIST")) {
+		print_tree(a->r);
+	} else
+	if (!strcmp(a->id, "FOR")) {
+		print_tree(a->r);
+	} else 
+	if (!strcmp(a->id, "FOR")) {
+		print_tree(a->r);
+	} else 
+	if (!strcmp(a->id, "STMT")) {
+		print_tree(a->l);
+		printf(";\n");
+		print_tree(a->r);
+	} else {
+		print_tree(a->l);
+		printf("%s", a->id);
+		print_tree(a->r);
+	}
+}
+
+void transform_tree(struct ast *a){
+	if (a == NULL) return;
+	if (!strcmp(a->id, "FOR") && a->r != NULL && !strcmp(a->r->id, "FOR")) {
+		struct ast *help = a->l;
+		a->l = a->r->l;
+		a->r->l = help;
+	}
+	transform_tree(a->l);
+	transform_tree(a->r);
 }

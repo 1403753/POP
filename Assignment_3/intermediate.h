@@ -28,4 +28,8 @@ void write_node(struct ast *a, FILE *dotfile, int nodenum, int parentnum);
 /* delete and free the AST */
 void free_tree(struct ast *);
 
+void print_tree(struct ast *a);
+
+void transform_tree(struct ast *a);
+
 #endif // INTERMEDIATE_H

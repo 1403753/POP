@@ -520,7 +520,13 @@ int main(int argc, char **argv)
 	} else
 		fprintf(stdout,"\n\nNo errors detected.\n");
 		
-	generate_dot(astree);	
+	transform_tree(astree);
+	//transform_tree(astree);
+
+	generate_dot(astree);
+	
+	printf("tree:\n\n");
+	print_tree(astree);
 
 	free_tree(astree);
 	

@@ -25,7 +25,7 @@ void main()
    /* B. induction variable substitution */ 
    v=0; 
    for (i=0; i<10; --i) 
-     { 
+     {
        v=v+1;
        A[v]=v;
      }
