@@ -11,14 +11,14 @@ int yylex();
 int yyerror(struct ast **astree, char *s);
 
 int debug = 0;
-//extern char *yytext;
+extern char *yytext;
 %}
 
 %parse-param {struct ast **astree}
 
 %union {
   struct ast *astree;
-  double d;
+  int d;
 	char id[50];
 }
 
@@ -56,7 +56,7 @@ int debug = 0;
 primary_expression
 	: IDENTIFIER						{ $$ = newid($1); 						if(debug)printf(" --primary_expression : IDENTIFIER\n"); }
 	| CONSTANT							{ $$ = newnum($1);    				if(debug)printf(" --primary_expression : CONSTANT\n"); }
-	| STRING_LITERAL				{ $$ = newid($1); 						if(debug)printf(" --primary_expression : STRING_LITERAL\n"); }
+	| STRING_LITERAL				{ $$ = newid(yytext); 				if(debug)printf(" --primary_expression : STRING_LITERAL\n"); }
 	| '(' expression ')'		{ $$ = $2; 										if(debug)printf(" --primary_expression : '(' expression ')'\n"); }
 	;
 
@@ -64,7 +64,7 @@ postfix_expression
 	: primary_expression 																		{ if(debug)printf(" --postfix_expression : primary_expression\n"); }
 	| postfix_expression '[' expression ']'									{ $$ = newast("[]", $1, $3); if(debug)printf(" --postfix_expression : postfix_expression '[' expression ']'\n"); }
 	| postfix_expression '(' ')'
-	| postfix_expression '(' argument_expression_list ')'
+	| postfix_expression '(' argument_expression_list ')'		{ $$ = newast("()", $1, $3); if(debug)printf(" --postfix_expression : postfix_expression '(' argument_expression_list ')'\n"); }
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
 	| postfix_expression INC_OP															{ $$ = newast("++", $1, NULL); if(debug)printf(" --postfix_expression : postfix_expression INC_OP\n"); }
@@ -206,7 +206,7 @@ declaration_specifiers
 
 init_declarator_list
 	: init_declarator																				{ 														 if(debug)printf(" --init_declarator_list : init_declarator\n"); }
-	| init_declarator_list ',' init_declarator							{ $$ = newast("DECLS", $1, $3); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
+	| init_declarator_list ',' init_declarator							{ $$ = newast(",", $1, $3); if(debug)printf(" --init_declarator_list : init_declarator_list ',' init_declarator\n"); }
 	;
 
 init_declarator
@@ -520,8 +520,8 @@ int main(int argc, char **argv)
 	} else
 		fprintf(stdout,"\n\nNo errors detected.\n");
 		
-	transform_tree(astree);
-	//transform_tree(astree);
+	loop_interchange(astree);
+//	loop_normalization(astree);
 
 	generate_dot(astree);
 	

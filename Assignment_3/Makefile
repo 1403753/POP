@@ -1,7 +1,7 @@
 all:
 	bison -d parser.y
 	flex scanner.l
-	gcc lex.yy.c parser.tab.c intermediate.c -o cparser
+	gcc lex.yy.c parser.tab.c intermediate.c -o cparser -lm
 
 parser:
 	bison -d parser.y

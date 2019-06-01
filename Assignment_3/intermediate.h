@@ -4,7 +4,7 @@
 struct ast {
   int nodetype;
 	char id[50];
-	double d;
+	int d;
   struct ast *l;
   struct ast *r;
 };
@@ -15,7 +15,7 @@ struct ast {
 struct ast *newast(char *id, struct ast *l, struct ast *r);
 
 // leaf
-struct ast *newnum(double d);
+struct ast *newnum(int d);
 struct ast *newid(char *id);
 
 /* generate the dot file for the AST */
@@ -30,6 +30,7 @@ void free_tree(struct ast *);
 
 void print_tree(struct ast *a);
 
-void transform_tree(struct ast *a);
+void loop_interchange(struct ast *a);
+void loop_normalization(struct ast *a);
 
 #endif // INTERMEDIATE_H
