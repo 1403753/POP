@@ -127,24 +127,25 @@ void comment()
 {
 	char c, c1;
 
-ECHO;
+// ECHO;
 loop:
 	while ((c = input()) != '*' && c != 0)
-		putchar(c);
+		;//putchar(c);
 
-        putchar(c);
+  ;//putchar(c);
 	if ((c1 = input()) != '/' && c != 0)
 	{
-		unput(c1);
+		//unput(c1);
 		goto loop;
 	}
 
 	if (c != 0)
-		putchar(c1);
+		;//putchar(c1);
 }
 
 
 int column = 0;
+int echo = 1;
 
 void count()
 {
@@ -155,10 +156,13 @@ void count()
 			column = 0;
 		else if (yytext[i] == '\t')
 			column += 8 - (column % 8);
+		else if (yytext[i] == '{')
+			echo = 0;
 		else
 			column++;
 
-	ECHO;
+		if (echo) 
+			ECHO;
 }
 
 

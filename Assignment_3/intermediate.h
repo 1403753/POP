@@ -4,7 +4,7 @@
 struct ast {
   int nodetype;
 	char id[50];
-	int d;
+	double d;
   struct ast *l;
   struct ast *r;
 };
@@ -15,7 +15,7 @@ struct ast {
 struct ast *newast(char *id, struct ast *l, struct ast *r);
 
 // leaf
-struct ast *newnum(int d);
+struct ast *newnum(double d);
 struct ast *newid(char *id);
 
 /* generate the dot file for the AST */

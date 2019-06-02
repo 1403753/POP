@@ -18,7 +18,7 @@ extern char *yytext;
 
 %union {
   struct ast *astree;
-  int d;
+  double d;
 	char id[50];
 }
 
@@ -223,15 +223,15 @@ storage_class_specifier
 	;
 
 type_specifier
-	: VOID															{	$$ = newid("VOID"); if(debug)printf(" --type_specifier : VOID\n"); }
-	| CHAR															{ $$ = newid("CHAR"); if(debug)printf(" --type_specifier : CHAR\n"); }
-	| SHORT															{ $$ = newid("SHORT"); if(debug)printf(" --type_specifier : SHORT\n"); }
-	| INT																{ $$ = newid("INT"); if(debug)printf(" --type_specifier : INT\n"); }
-	| LONG															{ $$ = newid("LONG"); if(debug)printf(" --type_specifier : LONG\n"); }
-	| FLOAT															{ $$ = newid("FLOAT"); if(debug)printf(" --type_specifier : FLOAT\n"); }
-	| DOUBLE														{ $$ = newid("DOUBLE"); if(debug)printf(" --type_specifier : DOUBLE\n"); }
-	| SIGNED														{ $$ = newid("SIGNED"); if(debug)printf(" --type_specifier : SIGNED\n"); }
-	| UNSIGNED													{ $$ = newid("UNSIGNED"); if(debug)printf(" --type_specifier : UNSIGNED\n"); }
+	: VOID															{	$$ = newid("void"); if(debug)printf(" --type_specifier : VOID\n"); }
+	| CHAR															{ $$ = newid("char"); if(debug)printf(" --type_specifier : CHAR\n"); }
+	| SHORT															{ $$ = newid("short"); if(debug)printf(" --type_specifier : SHORT\n"); }
+	| INT																{ $$ = newid("int"); if(debug)printf(" --type_specifier : INT\n"); }
+	| LONG															{ $$ = newid("long"); if(debug)printf(" --type_specifier : LONG\n"); }
+	| FLOAT															{ $$ = newid("float"); if(debug)printf(" --type_specifier : FLOAT\n"); }
+	| DOUBLE														{ $$ = newid("double"); if(debug)printf(" --type_specifier : DOUBLE\n"); }
+	| SIGNED														{ $$ = newid("signed"); if(debug)printf(" --type_specifier : SIGNED\n"); }
+	| UNSIGNED													{ $$ = newid("unsigned"); if(debug)printf(" --type_specifier : UNSIGNED\n"); }
 	| struct_or_union_specifier					{ $$ = $1; if(debug)printf(" --type_specifier : struct_or_union_specifier\n"); }
 	| enum_specifier										{ $$ = $1; if(debug)printf(" --type_specifier : enum_specifier\n"); }
 	| TYPE_NAME													{ $$ = newid("TYPE_NAME"); if(debug)printf(" --type_specifier : TYPE_NAME\n"); }
@@ -503,7 +503,7 @@ int main(int argc, char **argv)
 	}
 
 	if (input_filename != NULL) {
-		if ((freopen(input_filename, "r",stdin))==NULL) {
+		if ((freopen(input_filename, "r", stdin))==NULL) {
 			fprintf(stdout,"%s: cannot open input file %s\n",argv[0],input_filename);
 			
 			exit(1);
@@ -511,22 +511,33 @@ int main(int argc, char **argv)
 	}
 	
 	struct ast *astree;
+
+	printf("#include <stdio.h>\n\n");
 	
 	yyresult = yyparse(&astree);
 		
 	if (yyresult) {
-		fprintf(stdout,"\n\nErrors detected.\n");
+		// fprintf(stdout,"\n\nErrors detected.\n");
 		exit(yyresult);
 	} else
-		fprintf(stdout,"\n\nNo errors detected.\n");
+		// fprintf(stdout,"\n\nNo errors detected.\n");
 		
 	loop_interchange(astree);
-//	loop_normalization(astree);
+	loop_normalization(astree);
 
 	generate_dot(astree);
 	
-	printf("tree:\n\n");
+
+//	FILE *f = fopen("a3.c", "r");
+//	int c;
+//	while ((c = getc(f)) != '{' && c != EOF)
+//		putchar(c);
+	
+//	fclose(f);
+	
+	printf("{\n");
 	print_tree(astree);
+	printf(";\n}\n");
 
 	free_tree(astree);
 	

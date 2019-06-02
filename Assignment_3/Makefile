@@ -14,12 +14,18 @@ debug:
 	flex -d scanner.l
 	gcc -g lex.yy.c parser.tab.c intermediate.c -o cparser
 
-clean:
-	rm -f lex.yy.c parser.tab.c parser.tab.h cparser 
 
-clean_all:
-	rm -f lex.yy.c parser.tab.c parser.tab.h cparser *.lis *.png *.dot *.eps
-	
+clean:
+	rm -f lex.yy.c parser.tab.c parser.tab.h out.c cparser out *.png *.dot
+
+
+run:
+	gcc a3.c -o out
+	./out
+	./cparser a3.c > out.c 2>&1
+	gcc out.c -o out
+	./out
+
 png:
 	dot -Tpng  test_function.dot -o test_function.png
 
