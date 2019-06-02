@@ -1,5 +1,6 @@
 /* declarations outside */
 int A[100];
+double C[100];
 int B[100][100];
 int main()
 {
@@ -7,18 +8,18 @@ int main()
 	/* declarations inside */
 	int i,j;
 	int v;
+	double k;
 
-
+	k = 3.1415;
 	/* now only executable statements ... */
 
 	/* A. loop normalization */
 	for (i=10; i<=20; i=i+2)
-		A[i]=i;
+		C[i]=i * k;
 	/* output result */
-	printf("i, A[20]: %d, %d \n", i, A[20]);
-	for (i=0; i<=20; i++) printf("%d ", A[i]);
+	printf("i, C[20]: %d, %.2f \n", i, A[20]);
+	for (i=0; i<=20; i++) printf("%.2f ", C[i]);
 	printf("\n");
-
 
 	/* C. loop interchange */
 	for (i=0; i<10; i++) 

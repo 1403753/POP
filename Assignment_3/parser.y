@@ -472,6 +472,8 @@ int yyerror(struct ast **astree, char *s)
 int main(int argc, char **argv)
 {
 	int i, yyresult;
+	int interchange = 0;
+	int normalization = 0;
 
 	for(i=1;i<argc;i++) {
 		if (*argv[i]=='-') {
@@ -488,8 +490,13 @@ int main(int argc, char **argv)
 				case 'd':
 					debug = 1;
 					break;
-					
-       default:
+				case 'i':
+					interchange = 1; printf("/* performed loop_interchange. */\n");
+					break;
+				case 'n':
+					normalization = 1; printf("/* performed loop_normalization. */\n");
+					break;
+        default:
           fprintf(stderr,"%s: unknown argument option\n",argv[0]);
           exit(1);
        }
@@ -511,7 +518,7 @@ int main(int argc, char **argv)
 	}
 	
 	struct ast *astree;
-
+		
 	printf("#include <stdio.h>\n\n");
 	
 	yyresult = yyparse(&astree);
@@ -521,19 +528,14 @@ int main(int argc, char **argv)
 		exit(yyresult);
 	} else
 		// fprintf(stdout,"\n\nNo errors detected.\n");
-		
-	loop_interchange(astree);
-	loop_normalization(astree);
+	
+	if (interchange)
+		loop_interchange(astree);
+	
+	if (normalization)
+		loop_normalization(astree);
 
 	generate_dot(astree);
-	
-
-//	FILE *f = fopen("a3.c", "r");
-//	int c;
-//	while ((c = getc(f)) != '{' && c != EOF)
-//		putchar(c);
-	
-//	fclose(f);
 	
 	printf("{\n");
 	print_tree(astree);
