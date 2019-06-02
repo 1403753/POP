@@ -172,7 +172,9 @@ void print_tree(struct ast *a)
 }
 
 void loop_interchange(struct ast *a){
+	
 	if (a == NULL) return;
+	
 	if (!strcmp(a->id, "FOR") && a->r != NULL && !strcmp(a->r->id, "FOR")) {
 		struct ast *help = a->l;
 		a->l = a->r->l;
@@ -184,6 +186,8 @@ void loop_interchange(struct ast *a){
 
 void replace(struct ast *a, char* id, char* replacement) {
 	if (a == NULL) return;
+	
+	// If the loop variable has been identified replace it with the transformation statement.
 	if (!strcmp(a->id, id)) {
 		strcpy(a->id, replacement);
 	}
@@ -192,49 +196,56 @@ void replace(struct ast *a, char* id, char* replacement) {
 }
 
 void loop_normalization(struct ast *a){
+	
 	if (a == NULL) return;
+	
 	loop_normalization(a->l);
 	loop_normalization(a->r);	
+	
 	if (!strcmp(a->id, "FOR") && a->l != NULL && a->l->l != NULL && a->l->l->l != NULL) {
+		
+		// get the l, u and s values that will be transformed.
 		int l = a->l->l->l->r->d;
 		int u = a->l->l->r->r->d;
 		int s = !strcmp(a->l->r->id, "++") ? 1 : (int)a->l->r->r->r->d;
-
+		
+		// Calculate the length of the string (%l+(%i-1)*%s)
 		int len1 = 2*strlen(a->l->l->l->l->id) + 11 +	// "i"
 							strlen(a->l->l->l->r->id) + 				// "l"
 							floor(log10(abs(s))) + 1;						// "s"
 
-		int len2 = strlen(a->l->l->l->l->id) + 10 +		// "i"
+		// Calculate the length of the string %i=%l+(%i-1)*%s;\n
+		int len2 = strlen(a->l->l->l->l->id) + 9 +		// "i"
 							strlen(a->l->l->l->r->id) + 				// "l"
 							floor(log10(abs(s))) + 1;						// "s"
 
-		char correction1[len1];
-		char correction2[len2];
+		char outside_correction[len1];
+		char inside_correction[len2];
 
 
-
-		sprintf(correction2, "(%d+(%s-1)*%d)", l, a->l->l->l->l->id, s);
+		// Generate the transformation statement that replaces the loop variable inside the loop.
+		sprintf(inside_correction, "(%d+(%s-1)*%d)", l, a->l->l->l->l->id, s);
 		
-		replace(a->r, a->l->l->l->l->id, correction2);
+		// Call recursive function that replaces the loop variable inide the loop.
+		replace(a->r, a->l->l->l->l->id, inside_correction);
 		
-		sprintf(correction1, "%s=%d+(%s-1)*%d;\n", a->l->l->l->l->id, l, a->l->l->l->l->id, s);
+		// Generate the back-transformation statement for the loop variable after the loop.
+		sprintf(outside_correction, "%s=%d+(%s-1)*%d;\n", a->l->l->l->l->id, l, a->l->l->l->l->id, s);
 		
+		// Normalize start value
 		a->l->l->l->r->d = 1;
-		// strcpy(a->l->l->l->r->id, "1");
-		
+		// Normalize upper bound
 		a->l->l->r->r->d = (u - l + s) / s;
-		// sprintf(a->l->l->r->r->id, "%d", (int)(u - l + s) / s);
-
+		
+		// Check if the ++ shortcut statement was used and set the stepsize to 1 otherwise.
 		if (strcmp(a->l->r->id, "++")) {
 			a->l->r->r->r->d = 1;
-			// strcpy(a->l->r->r->r->id, "1");
 		}
 		
-
-		
+		// Make the current node the "STMT" node and create and connect a new "FOR" node.
 		strcpy(a->id, "STMT");
 		a->l = newast("FOR", a->l, a->r);
-		a->r = newid(correction1);
+		a->r = newid(outside_correction);
 
 	}
 

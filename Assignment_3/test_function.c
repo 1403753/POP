@@ -17,7 +17,7 @@ int main()
 	for (i=10; i<=20; i=i+2)
 		C[i]=i * k;
 	/* output result */
-	printf("i, C[20]: %d, %.2f \n", i, A[20]);
+	printf("i, C[20]: %d, %.2f \n", i, C[20]);
 	for (i=0; i<=20; i++) printf("%.2f ", C[i]);
 	printf("\n");
 
